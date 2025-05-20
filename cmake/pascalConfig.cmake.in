@@ -1,0 +1,13 @@
+@PACKAGE_INIT@
+include("${CMAKE_CURRENT_LIST_DIR}/pascalTargets.cmake")
+``` :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
+
+* Garde-le **si** :
+  * tu prévois un `make install` (ou `cpack`) de ta toolchain ;
+  * tu veux que tes exemples, ou un projet tiers, puissent
+    `find_package(pascal)` plutôt que `add_subdirectory(...)`.
+
+* Tu peux le **supprimer** ainsi que la ligne :
+
+```cmake
+install(EXPORT pascalTargets FILE pascalTargets.cmake DESTINATION lib/cmake)
