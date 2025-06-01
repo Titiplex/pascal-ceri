@@ -10,11 +10,7 @@ keywords:
 - compiler
 - pascal
 - assembly
-- x86
-  tags:
-- academic
-- programming-language
-
+- version x86 x64
 ---
 
 # CERI Compiler
