@@ -2,23 +2,30 @@
 // Created by Titiplex on 03/05/2025.
 //
 
-#include "../include/utils.h"
-#include "../include/tokeniser.h"
+#include "utils.h"
+#include "tokeniser.h"
 #include <iostream>
 #undef BEGIN
 #undef END
 #include <functional>
-#include <set>
-#include <string>
 #include <optional>
+#include <set>
+#include <source_location>
 #include <sstream>
+#include <string>
 using namespace std;
 
-void Error(const string& s)
+unordered_map<std::string, ArrayInfo> Arrays;
+set<std::string> DeclaredVariables;
+unordered_map<std::string, TYPE> VariableType;
+
+void Error(const string& s, const std::source_location& loc)
 {
-    cerr << "Ligne n°" << getLineNo() << ", lu : '" << getCurrentString() << "'(" << getCurrent() << "), mais ";
-    cerr << s << endl;
-    exit(-1);
+    cerr << "Ligne n " << getLineNo() << ", lu : '" << getCurrentString() << "'(" << getCurrent() << "), mais " <<
+        s << endl << "declenche par :" << endl
+            << loc.function_name()          // VarDeclaration, Expression...
+              << " (" << loc.file_name() << ':' << loc.line() << ")";
+    std::exit(EXIT_FAILURE);
 }
 
 void TypeError(const string& s)
@@ -42,11 +49,6 @@ optional<string> getTypeDeclarationString(const TYPE type, const string& var)
 
 KEYWORDS getCurrentKeyword()
 {
-    if (getCurrent() != KEYWORD)
-    {
-        Error("Token Illegal");
-    }
-
     const string kw = getCurrentString();
 
     if (kw == "DISPLAY") return DISPLAY;
@@ -74,8 +76,7 @@ KEYWORDS getCurrentKeyword()
     if (kw == "PROCEDURE") return PROCEDURE;
     if (kw == "RETURN") return RETURN;
 
-    Error("Mot-clé non reconnu");
-    exit(-1);
+    return UKN;
 }
 
 TYPE getCurrentType()
@@ -137,11 +138,13 @@ unsigned long incrementTagNumber()
 
 string captureOutputOf(const function<void()>& f)
 {
-    const ostringstream oss;
-    streambuf* oldCout = cout.rdbuf();
-    cout.rdbuf(oss.rdbuf());
+    // ReSharper disable once CppLocalVariableMayBeConst
+    ostringstream oss;
+    streambuf* old_buf = cout.rdbuf(oss.rdbuf());
     f();
-    cout.rdbuf(oldCout);
+    cout.flush();
+    oss.flush();
+    cout.rdbuf(old_buf);
     return oss.str();
 }
 
@@ -149,7 +152,7 @@ string nextLbl;
 
 void setNextLbl()
 {
-    nextLbl = "Next" + to_string(incrementTagNumber()) + ":";
+    nextLbl = "Next" + to_string(incrementTagNumber());
 }
 
 string getNextLbl()
@@ -177,4 +180,13 @@ string escapeString(const string& in)
         }
     }
     return out;
+}
+
+void CheckArrayIndex(const string& name)
+{
+    cout << "\t# Check array index for " << name << endl;
+    cout << "\tcmp $0, %rax" << endl;
+    cout << "\tjl ErrorArrayIndex \t# < 0 ?" << endl;
+    cout << "\tcmp $" << Arrays[name].length << ", %rax" << endl;
+    cout << "\tjge ErrorArrayIndex \t# > len ?" << endl;
 }

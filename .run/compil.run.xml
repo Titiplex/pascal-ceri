@@ -2,6 +2,7 @@
   <configuration default="false" name="compil" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pascal-ceri" TARGET_NAME="pascal" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pascal-ceri" RUN_TARGET_NAME="pascal">
     <method v="2">
       <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      <option name="CMake.Install" enabled="true" />
     </method>
   </configuration>
 </component>

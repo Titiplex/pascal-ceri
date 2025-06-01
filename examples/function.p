@@ -1,0 +1,7 @@
+FUNCTION Add(a, b : INTEGER) : INTEGER;
+BEGIN
+    RETURN a + b
+END.
+BEGIN
+    DISPLAY Add(10, 32)
+END.

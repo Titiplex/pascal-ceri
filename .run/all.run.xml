@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="all" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-h" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pascal-ceri" RUN_TARGET_NAME="pascal" EXPLICIT_BUILD_TARGET_NAME="all">
+    <method v="2">
+      <option name="CMake.Explicit.Target" explicitTargetName="clean" />
+      <option name="CMake.Install" enabled="true" />
+      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+    </method>
+  </configuration>
+</component>

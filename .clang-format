@@ -1,0 +1,16 @@
+# .clang-format
+---
+BasedOnStyle: Google
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 100
+
+BreakBeforeBraces: Allman
+AllowShortIfStatementsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+
+DerivePointerAlignment: false
+PointerAlignment: Left
+
+Language: Cpp

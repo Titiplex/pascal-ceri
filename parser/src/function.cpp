@@ -32,7 +32,6 @@ void ParameterGroup(FunctionInfo *info, int &stackPosition)
 
 void FunctionDeclarationHeading(FunctionInfo *info)
 {
-    next();
     if (getCurrent()!=ID) Error("Votre fonction doit avoir un nom");
     info->name = getCurrentString();
     next();
@@ -48,7 +47,7 @@ void FunctionDeclarationHeading(FunctionInfo *info)
             ParameterGroup(info, stackPosition);
             next();
         }
-        if (getCurrent() != LBRACKET) Error("')' attendu");
+        if (getCurrent() != LPARENT) Error("')' attendu");
         next();
     }
     if (info->returnType != VOID)
@@ -90,9 +89,10 @@ void FunctionDeclarationPart()
         functionInfo->returnType = (getCurrentKeyword() == FUNCTION ? INT : VOID);
         next();
         FunctionDeclaration(functionInfo);
+        Functions.FunctionList[functionInfo->name] = functionInfo;
+        if (getCurrent() == SEMICOLON) next();
     }
 
-    next();
     if (getCurrent() != DOT) Error("'.' attendu");
     next();
 }

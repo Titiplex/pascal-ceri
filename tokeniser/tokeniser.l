@@ -1,7 +1,7 @@
 %{
-// This is our Lexical tokeniser 
+// This is our Lexical tokeniser
 // It should be compiled into cpp with :
-// flex++ -d -otokeniser.cpp tokeniser.l 
+// flex++ -d -otokeniser.cpp tokeniser.l
 // And then compiled into object with
 // g++ -c tokeniser.cpp
 // tokens can be read using lexer->yylex()
@@ -19,7 +19,7 @@ using namespace std;
 %option c++
 %option yylineno
 
-stringconst  \"[^\n"][^\n"]+\"
+stringconst  \"[^\n"]*\"
 charconst \'[^\n"]\'
 ws      [ \t\n\r]+
 alpha   [A-Za-z]
@@ -64,13 +64,14 @@ unknown [^\"A-Za-z0-9 \n\r\t\(\)\<\>\=\!\%\&\|\}\-\;\.]+
     	        			break;
     	     			else
   	          			unput(c);
-  	   		}	
+  	   		}
 		}
 	};
 
 {unknown}	return UNKNOWN;
 
 %%
+#include <string>
 
 FlexLexer* lexer = new yyFlexLexer; // This is the flex tokenizer
 // tokens can be read using lexer->yylex()
@@ -84,11 +85,14 @@ TOKEN getCurrent() {
 }
 
 string getCurrentString() {
-    return lexer->YYText();
+    std::string str = lexer->YYText();
+    std::cerr << "Read : " << str << std::endl;
+    return str;
 }
 
 void next() {
     current=(TOKEN) lexer->yylex();
+    std::cerr << "Current token: " << lexer->YYText() << std::endl;
 }
 
 int getLineNo() {

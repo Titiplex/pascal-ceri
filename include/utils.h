@@ -1,12 +1,10 @@
 #pragma once
 #include <functional>
-
-using namespace std;
-#include <unordered_map>
-#include <map>
 #include <optional>
 #include <set>
+#include <source_location>
 #include <string>
+#include <unordered_map>
 
 #ifndef UTILS_H
 #define UTILS_H
@@ -22,7 +20,7 @@ enum TYPE { BOOL, INT, DB, CH, ARR, STR, VOID };
 enum KEYWORDS
 {
     DISPLAY, IF, THEN, ELSE, BEGIN, END, FOR, TO, DOWNTO, WHILE, DO, VAR, INTEGER, BOOLEAN, DOUBLE, CHAR, STEP,
-    CASE, OF, STRING, ARRAY, FUNCTION, PROCEDURE, RETURN
+    CASE, OF, STRING, ARRAY, FUNCTION, PROCEDURE, RETURN, UKN
 };
 
 struct ArrayInfo
@@ -31,11 +29,11 @@ struct ArrayInfo
     int length;
 };
 
-inline unordered_map<string, ArrayInfo> Arrays;
+extern std::unordered_map<std::string, ArrayInfo> Arrays;
 
 // généré automatiquement par CLion
 template<>
-struct std::hash<pair<int, string>> {
+struct std::hash<std::pair<int, TYPE>> {
     size_t operator()(const pair<int, TYPE>& p) const noexcept
     {
         return hash<int>()(p.first) ^ hash<TYPE>()(p.second);
@@ -44,35 +42,36 @@ struct std::hash<pair<int, string>> {
 
 struct FunctionInfo
 {
-    string name;
+    std::string name;
     TYPE returnType;
-    unordered_map<string, pair<int, TYPE>> args; // nom + type
+    std::unordered_map<std::string, std::pair<int, TYPE>> args; // nom + type
 
     FunctionInfo() : returnType(VOID) {}
 };
 
 struct Functions
 {
-    unordered_map<string, FunctionInfo*> FunctionList{};
+    std::unordered_map<std::string, FunctionInfo*> FunctionList{};
 	FunctionInfo* CurrentFunction = nullptr;
 };
 
-inline set<string> DeclaredVariables;
-inline unordered_map<string, TYPE> VariableType;
+extern std::set<std::string> DeclaredVariables;
+extern std::unordered_map<std::string, TYPE> VariableType;
 
-void Error(const string& s);
-void TypeError(const string& s);
-optional<string> getTypeDeclarationString(TYPE type, const string& var);
+void Error(const std::string& s, const std::source_location& loc = std::source_location::current());
+void TypeError(const std::string& s);
+std::optional<std::string> getTypeDeclarationString(TYPE type, const std::string& var);
 TYPE getCurrentType();
 KEYWORDS getCurrentKeyword();
 bool IsDeclared(const char* id);
-void opDouble(const string& op);
+void opDouble(const std::string& op);
 int getTypeSize(TYPE t);
 unsigned long getTagNumber();
 unsigned long incrementTagNumber();
-string captureOutputOf(const function<void()>& f);
+std::string captureOutputOf(const std::function<void()>& f);
 void setNextLbl();
-string getNextLbl();
-string escapeString(const string& in);
+std::string getNextLbl();
+std::string escapeString(const std::string& in);
+void CheckArrayIndex(const std::string& name);
 
 #endif //UTILS_H
